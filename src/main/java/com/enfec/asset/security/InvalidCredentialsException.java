@@ -1,0 +1,8 @@
+package com.enfec.asset.security;
+
+public class InvalidCredentialsException extends RuntimeException {
+
+    public InvalidCredentialsException() {
+        super("Invalid username or password");
+    }
+}

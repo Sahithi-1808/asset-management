@@ -1,0 +1,74 @@
+{
+  "info": {
+    "name": "Asset Management API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {"key": "baseUrl", "value": "http://localhost:8084"},
+    {"key": "assetId", "value": ""}
+  ],
+  "item": [
+    {
+      "name": "Create Asset",
+      "request": {
+        "method": "POST",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"assetTag\": \"LAP-001\",\n  \"name\": \"Dell Latitude 5440\",\n  \"category\": \"Laptop\",\n  \"manufacturer\": \"Dell\",\n  \"model\": \"Latitude 5440\",\n  \"status\": \"IN_STOCK\"\n}"},
+        "url": "{{baseUrl}}/api/v1/assets"
+      }
+    },
+    {
+      "name": "List Assets",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/v1/assets"}
+    },
+    {
+      "name": "Get Asset",
+      "request": {"method": "GET", "url": "{{baseUrl}}/api/v1/assets/{{assetId}}"}
+    },
+    {
+      "name": "Update Status - Assigned",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"status\": \"ASSIGNED\"\n}"},
+        "url": "{{baseUrl}}/api/v1/assets/{{assetId}}/status"
+      }
+    },
+    {
+      "name": "Update Status - In Repair",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"status\": \"IN_REPAIR\"\n}"},
+        "url": "{{baseUrl}}/api/v1/assets/{{assetId}}/status"
+      }
+    },
+    {
+      "name": "Update Status - Retired",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"status\": \"RETIRED\"\n}"},
+        "url": "{{baseUrl}}/api/v1/assets/{{assetId}}/status"
+      }
+    },
+    {
+      "name": "Invalid Status",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"status\": \"LOST\"\n}"},
+        "url": "{{baseUrl}}/api/v1/assets/{{assetId}}/status"
+      }
+    },
+    {
+      "name": "Unknown Asset",
+      "request": {
+        "method": "PATCH",
+        "header": [{"key": "Content-Type", "value": "application/json"}],
+        "body": {"mode": "raw", "raw": "{\n  \"status\": \"ASSIGNED\"\n}"},
+        "url": "{{baseUrl}}/api/v1/assets/00000000-0000-0000-0000-000000000000/status"
+      }
+    }
+  ]
+}

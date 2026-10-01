@@ -1,0 +1,35 @@
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS serial_number VARCHAR(255);
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS condition VARCHAR(255);
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS purchase_date DATE;
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS warranty_start_date DATE;
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS warranty_expiry_date DATE;
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS asset_expiry_date DATE;
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS vendor VARCHAR(255);
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS purchase_price NUMERIC;
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS invoice_number VARCHAR(255);
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS purchase_order_number VARCHAR(255);
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS assigned_date DATE;
+
+ALTER TABLE asset
+    ADD COLUMN IF NOT EXISTS location VARCHAR(255);

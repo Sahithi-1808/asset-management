@@ -1,0 +1,34 @@
+spring:
+  application:
+    name: asset-management
+
+  datasource:
+    url: ${ASSET_DATASOURCE_URL:jdbc:postgresql://localhost:5434/asset_management}
+    username: ${ASSET_DATASOURCE_USERNAME:asset_management}
+    password: ${ASSET_DATASOURCE_PASSWORD:asset_management}
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: ${SERVER_PORT:8084}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+app:
+  jwt:
+    secret: ${ASSET_JWT_SECRET:change-this-development-secret-key-to-a-long-random-value-123456789}
+    expiration-ms: ${ASSET_JWT_EXPIRATION_MS:86400000}
