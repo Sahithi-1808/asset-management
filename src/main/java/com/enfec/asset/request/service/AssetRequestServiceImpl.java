@@ -604,14 +604,18 @@ public class AssetRequestServiceImpl implements AssetRequestService {
                 AssetRequestStatus.ASSIGNED
         );
 
+        UUID selectedAssetId =
+                input != null && input.assetId() != null
+                        ? input.assetId()
+                        : request.getAssetId();
+
         AssetEntity asset =
-                assetRepository.findById(
-                        request.getAssetId()
-                ).orElseThrow(() ->
-                        new IllegalArgumentException(
-                                "Asset linked to the request was not found."
-                        )
-                );
+                assetRepository.findById(selectedAssetId)
+                        .orElseThrow(() ->
+                                new IllegalArgumentException(
+                                        "Selected asset was not found."
+                                )
+                        );
 
         if (asset.getStatus() != AssetStatus.IN_STOCK
                 && request.getStatus()

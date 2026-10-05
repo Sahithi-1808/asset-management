@@ -698,7 +698,7 @@ export default function DashboardPage() {
                             <button
                                 type="button"
                                 onClick={() =>
-                                    router.push("/admin/audit-logs")
+                                    router.push("/audit-logs")
                                 }
                                 className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-amber-400/30 bg-amber-400/10 px-5 py-2.5 text-sm font-semibold text-amber-200 transition-all hover:-translate-y-0.5 hover:border-amber-300/50 hover:bg-amber-400/20"
                             >
@@ -711,7 +711,7 @@ export default function DashboardPage() {
                             <button
                                 type="button"
                                 onClick={() =>
-                                    router.push("/admin/tickets")
+                                    router.push("/tickets")
                                 }
                                 className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-indigo-300/30 bg-indigo-400/10 px-5 py-2.5 text-sm font-semibold text-indigo-200 transition-all hover:-translate-y-0.5 hover:border-indigo-300/50 hover:bg-indigo-400/20"
                             >

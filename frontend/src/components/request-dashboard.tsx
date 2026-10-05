@@ -171,6 +171,8 @@ export default function RequestDashboard({ role, title, subtitle }: Props) {
     const [createError, setCreateError] = useState("");
     const [creating, setCreating] = useState(false);
     const [approvalComment, setApprovalComment] = useState("");
+    const [showFulfillModal, setShowFulfillModal] = useState(false);
+    const [selectedAssetId, setSelectedAssetId] = useState("");
 
     const [form, setForm] = useState({
         employeeUsername: "",
@@ -525,7 +527,41 @@ export default function RequestDashboard({ role, title, subtitle }: Props) {
     }
 
     function fulfill(request: RequestItem) {
-        action(`${request.id}/fulfill`, { assignedUsername: request.employeeUsername });
+        const availableAssets = assets.filter(
+            (asset) => asset.status === "IN_STOCK"
+        );
+
+        if (availableAssets.length === 0) {
+            setError("No available assets are currently in stock for fulfillment.");
+            return;
+        }
+
+        setSelectedRequest(request);
+        setSelectedAssetId("");
+        setShowFulfillModal(true);
+    }
+
+    function submitFulfillment() {
+        if (!selectedRequest) {
+            return;
+        }
+
+        if (!selectedAssetId) {
+            setError("Please select an available asset.");
+            return;
+        }
+
+        void action(
+            `${selectedRequest.id}/fulfill`,
+            {
+                assignedUsername: selectedRequest.employeeUsername,
+                assetId: selectedAssetId,
+            }
+        );
+
+        setShowFulfillModal(false);
+        setSelectedAssetId("");
+        setSelectedRequest(null);
     }
 
     function closeRequest(request: RequestItem) {
@@ -773,6 +809,129 @@ export default function RequestDashboard({ role, title, subtitle }: Props) {
                                         {employee.role.replaceAll("_", " ")}
                                     </span>
                                                         </div>
+
+                                                        {showFulfillModal && selectedRequest && (
+                                                            <Modal
+                                                                title="Select Asset for Fulfillment"
+                                                                onClose={() => {
+                                                                    setShowFulfillModal(false);
+                                                                    setSelectedAssetId("");
+                                                                }}
+                                                            >
+                                                                <div className="space-y-5">
+                                                                    <div className="rounded-2xl border border-indigo-100 bg-indigo-50/50 p-4">
+                                                                        <p className="text-xs font-bold uppercase tracking-wide text-indigo-600">
+                                                                            Employee
+                                                                        </p>
+
+                                                                        <p className="mt-1 text-sm font-bold text-slate-900">
+                                                                            {selectedRequest.employeeUsername}
+                                                                        </p>
+
+                                                                        <p className="mt-1 text-xs text-slate-500">
+                                                                            Select an available inventory asset to fulfill this request.
+                                                                        </p>
+                                                                    </div>
+
+                                                                    <div>
+                                                                        <p className="mb-3 text-sm font-bold text-slate-900">
+                                                                            Available Assets
+                                                                        </p>
+
+                                                                        <div className="space-y-3">
+                                                                            {assets
+                                                                                .filter((asset) => asset.status === "IN_STOCK")
+                                                                                .map((asset) => {
+                                                                                    const selected = selectedAssetId === asset.id;
+
+                                                                                    return (
+                                                                                        <button
+                                                                                            key={asset.id}
+                                                                                            type="button"
+                                                                                            onClick={() => setSelectedAssetId(asset.id)}
+                                                                                            className={`w-full rounded-2xl border p-4 text-left transition ${
+                                                                                                selected
+                                                                                                    ? "border-indigo-500 bg-indigo-50 ring-2 ring-indigo-100"
+                                                                                                    : "border-slate-200 bg-white hover:border-indigo-200 hover:bg-indigo-50/30"
+                                                                                            }`}
+                                                                                        >
+                                                                                            <div className="flex items-center justify-between gap-4">
+                                                                                                <div>
+                                                                                                    <p className="font-bold text-slate-900">
+                                                                                                        {asset.name}
+                                                                                                    </p>
+
+                                                                                                    <p className="mt-1 text-xs text-slate-500">
+                                                                                                        {asset.assetTag}
+                                                                                                        {" · "}
+                                                                                                        {asset.category ?? "Uncategorized"}
+                                                                                                        {" · "}
+                                                                                                        {asset.model ?? "No model"}
+                                                                                                    </p>
+                                                                                                </div>
+
+                                                                                                <div className="flex items-center gap-3">
+                                            <span className="rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700">
+                                                IN STOCK
+                                            </span>
+
+                                                                                                    {selected && (
+                                                                                                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-indigo-600 text-sm font-bold text-white">
+                                                    ✓
+                                                </span>
+                                                                                                    )}
+                                                                                                </div>
+                                                                                            </div>
+                                                                                        </button>
+                                                                                    );
+                                                                                })}
+
+                                                                            {assets.filter(
+                                                                                (asset) => asset.status === "IN_STOCK"
+                                                                            ).length === 0 && (
+                                                                                <div className="rounded-2xl border border-slate-200 bg-slate-50 px-5 py-8 text-center">
+                                                                                    <p className="text-sm font-semibold text-slate-600">
+                                                                                        No available assets
+                                                                                    </p>
+
+                                                                                    <p className="mt-1 text-xs text-slate-400">
+                                                                                        There are currently no assets in stock.
+                                                                                    </p>
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+
+                                                                    {error && (
+                                                                        <div className="rounded-xl border border-red-100 bg-red-50 px-4 py-3 text-sm text-red-700">
+                                                                            {error}
+                                                                        </div>
+                                                                    )}
+
+                                                                    <div className="flex justify-end gap-3 border-t border-slate-100 pt-5">
+                                                                        <button
+                                                                            type="button"
+                                                                            onClick={() => {
+                                                                                setShowFulfillModal(false);
+                                                                                setSelectedAssetId("");
+                                                                            }}
+                                                                            className="rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 hover:bg-slate-50"
+                                                                        >
+                                                                            Cancel
+                                                                        </button>
+
+                                                                        <button
+                                                                            type="button"
+                                                                            disabled={!selectedAssetId}
+                                                                            onClick={submitFulfillment}
+                                                                            className="rounded-xl bg-indigo-600 px-5 py-2.5 text-sm font-semibold text-white disabled:cursor-not-allowed disabled:opacity-50"
+                                                                        >
+                                                                            Assign Asset
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </Modal>
+                                                        )}
 
                                                         {/* Selected */}
                                                         {selected && (
