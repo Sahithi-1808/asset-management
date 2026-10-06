@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.UUID;
 
-public record CreateAssetRequestRequest(
+public record CreateAssetRequest(
         String employeeUsername,
 
         @NotNull(message = "Asset is required")

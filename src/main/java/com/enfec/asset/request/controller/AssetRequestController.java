@@ -23,7 +23,7 @@ public class AssetRequestController {
     @PostMapping
     public ResponseEntity<AssetRequestResponse> create(
             Authentication authentication,
-            @Valid @RequestBody CreateAssetRequestRequest request) {
+            @Valid @RequestBody CreateAssetRequest request) {
 
         return ResponseEntity.status(201).body(
                 service.create(

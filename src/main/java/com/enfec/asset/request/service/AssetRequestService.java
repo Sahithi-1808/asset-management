@@ -10,7 +10,7 @@ public interface AssetRequestService {
     AssetRequestResponse create(
             String actorUsername,
             String actorRole,
-            CreateAssetRequestRequest request
+            CreateAssetRequest request
     );
 
     List<AssetRequestResponse> list(

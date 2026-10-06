@@ -2078,9 +2078,9 @@ export default function DashboardPage() {
                                     Purchase Price
                                 </p>
                                 <p className="mt-1 text-white">
-                                    {selectedAsset.purchasePrice !== null
-                                        ? selectedAsset.purchasePrice.toLocaleString()
-                                        : "—"}
+                                    {selectedAsset.purchasePrice != null
+                                        ? Number(selectedAsset.purchasePrice).toLocaleString()
+                                        : "-"}
                                 </p>
                             </div>
 

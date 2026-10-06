@@ -49,7 +49,7 @@ public class AssetRequestServiceImpl implements AssetRequestService {
     public AssetRequestResponse create(
             String actorUsername,
             String actorRole,
-            CreateAssetRequestRequest input
+            CreateAssetRequest input
     ) {
         requireActor(actorUsername, actorRole);
 

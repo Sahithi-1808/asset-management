@@ -50,6 +50,20 @@ class AssetServiceImplTest {
                 "Dell",
                 "Latitude 5450",
                 null,
+                null,
+                "DL5450-001",
+                "NEW",
+                null,
+                null,
+                null,
+                null,
+                "Dell India",
+                null,
+                "INV-001",
+                "PO-001",
+                null,
+                "Hyderabad Office",
+                null,
                 null
         );
 
@@ -163,6 +177,106 @@ class AssetServiceImplTest {
     }
 
     @Test
+    void createAsset_shouldRejectAssignedAssetWithoutEmployee() {
+
+        CreateAssetRequest request = new CreateAssetRequest(
+                "LAPTOP-009",
+                "MacBook Pro",
+                "LAPTOP",
+                "Apple",
+                "MacBook Pro 14-inch",
+                AssetStatus.ASSIGNED,
+                null,
+                "APPLE-SN-009",
+                "NEW",
+                null,
+                null,
+                null,
+                null,
+                "Apple India",
+                new java.math.BigDecimal("150000"),
+                "INV-009",
+                "PO-009",
+                null,
+                "Hyderabad Office",
+                null,
+                null
+        );
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> assetService.createAsset(request)
+        );
+
+        verify(assetRepository, never())
+                .save(any(AssetEntity.class));
+    }
+
+    @Test
+    void createAsset_shouldPersistAssetDetails() {
+
+        CreateAssetRequest request = new CreateAssetRequest(
+                "MOUSE-002",
+                "Logitech MX Master 3S",
+                "MOUSE",
+                "Logitech",
+                "MX Master 3S",
+                null,
+                null,
+                "LOGI-MX3S-002",
+                "NEW",
+                java.time.LocalDate.of(2026, 10, 5),
+                java.time.LocalDate.of(2026, 10, 5),
+                java.time.LocalDate.of(2028, 10, 5),
+                java.time.LocalDate.of(2030, 10, 5),
+                "Logitech India",
+                new java.math.BigDecimal("8500"),
+                "INV-MOUSE-002",
+                "PO-MOUSE-002",
+                null,
+                "Hyderabad Office",
+                null,
+                null
+        );
+
+        when(assetRepository.save(any(AssetEntity.class)))
+                .thenAnswer(invocation ->
+                        invocation.getArgument(0));
+
+        AssetResponse response =
+                assetService.createAsset(request);
+
+        assertEquals("LOGI-MX3S-002", response.serialNumber());
+        assertEquals("NEW", response.condition());
+        assertEquals(
+                java.time.LocalDate.of(2026, 10, 5),
+                response.purchaseDate()
+        );
+        assertEquals(
+                java.time.LocalDate.of(2026, 10, 5),
+                response.warrantyStartDate()
+        );
+        assertEquals(
+                java.time.LocalDate.of(2028, 10, 5),
+                response.warrantyExpiryDate()
+        );
+        assertEquals(
+                java.time.LocalDate.of(2030, 10, 5),
+                response.assetExpiryDate()
+        );
+        assertEquals("Logitech India", response.vendor());
+        assertEquals(
+                new java.math.BigDecimal("8500"),
+                response.purchasePrice()
+        );
+        assertEquals("INV-MOUSE-002", response.invoiceNumber());
+        assertEquals("PO-MOUSE-002", response.purchaseOrderNumber());
+        assertEquals("Hyderabad Office", response.location());
+
+        verify(assetRepository).save(any(AssetEntity.class));
+    }
+
+    @Test
     void getAssetById_shouldThrowWhenAssetDoesNotExist() {
 
         UUID id = UUID.randomUUID();
@@ -178,3 +292,4 @@ class AssetServiceImplTest {
         verify(assetRepository).findById(id);
     }
 }
+

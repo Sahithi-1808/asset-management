@@ -67,6 +67,21 @@ public class AssetServiceImpl implements AssetService {
                 assignedTo
         );
 
+        asset.setSerialNumber(request.serialNumber());
+        asset.setCondition(request.condition());
+        asset.setPurchaseDate(request.purchaseDate());
+        asset.setWarrantyStartDate(request.warrantyStartDate());
+        asset.setWarrantyExpiryDate(request.warrantyExpiryDate());
+        asset.setAssetExpiryDate(request.assetExpiryDate());
+        asset.setVendor(request.vendor());
+        asset.setPurchasePrice(request.purchasePrice());
+        asset.setInvoiceNumber(request.invoiceNumber());
+        asset.setPurchaseOrderNumber(request.purchaseOrderNumber());
+        asset.setAssignedDate(request.assignedDate());
+        asset.setLocation(request.location());
+        asset.setLastMaintenanceDate(request.lastMaintenanceDate());
+        asset.setNextMaintenanceDate(request.nextMaintenanceDate());
+
         AssetEntity savedAsset = assetRepository.save(asset);
 
         return toResponse(savedAsset);
@@ -216,6 +231,26 @@ public class AssetServiceImpl implements AssetService {
                 asset.getModel(),
                 asset.getStatus(),
                 asset.getAssignedTo(),
+
+                asset.getSerialNumber(),
+                asset.getCondition(),
+
+                asset.getPurchaseDate(),
+                asset.getWarrantyStartDate(),
+                asset.getWarrantyExpiryDate(),
+                asset.getAssetExpiryDate(),
+
+                asset.getVendor(),
+                asset.getPurchasePrice(),
+                asset.getInvoiceNumber(),
+                asset.getPurchaseOrderNumber(),
+
+                asset.getAssignedDate(),
+                asset.getLocation(),
+
+                asset.getLastMaintenanceDate(),
+                asset.getNextMaintenanceDate(),
+
                 asset.getCreatedAt(),
                 asset.getUpdatedAt()
         );
